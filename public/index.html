@@ -44,7 +44,7 @@
                     <button type="submit" class="btn btn-success">Sign in</button>
                     <a ui-sref="register" class="visible-xs reg-btn pull-right">register</a>
                 </form>
-                <ul class="nav navbar-nav navbar-right" ng-show="!userAuth">
+                <ul class="nav navbar-nav navbar-right" ng-show="userAuth">
                     <li><a ui-sref="topic">New topic</a></li>
                     <li><a ui-sref="myTopic">My topics</a></li>
                     <li class="dropdown">
