@@ -1,8 +1,27 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.jumbotron {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    margin-bottom: 0px;
 }
 
 a {
-  color: #00B7FF;
+    cursor: pointer;
+}
+
+/*.active {
+    color: red;
+    font-weight: bold;
+}*/
+
+.reg-btn {
+    padding: 10px;
+}
+
+.pd-tp {
+    padding-top: 30px;
 }

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nodemon --watch app --watch routes ./bin/www"
+    "test": "nodemon --watch app.js --watch routes/**.js ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -16,8 +16,10 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.22.0",
     "browser-sync": "^2.18.8",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
     "gulp-uglify": "^2.0.1"
   }

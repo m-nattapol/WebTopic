@@ -1,0 +1,16 @@
+<h1>{{ title }}</h1>
+<hr>
+
+<error-alert></error-alert>
+
+<div class="topic clearfix" ng-repeat="topic in topics">
+    <h4><a href="/topic/{{topic._id}}">{{topic.title}}</a></h4>
+    <p class="text-right">
+        <small>{{topic.author.name}} {{topic.author.lastname}} : {{topic.date|date:'medium'}}</small>
+    </p>
+    <hr>
+</div>
+
+<p id="btn-loadmore" class="load-more text-center"
+    ng-click=""
+    ng-show="loadMore">More</p>

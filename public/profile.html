@@ -1,0 +1,68 @@
+<div>
+    <h2 class="">Edit Profile</h2>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+        <li role="presentation"><a href="#password" aria-controls="password" role="tab" data-toggle="tab">Password</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="profile">
+            <form class="form-horizontal pd-tp">
+                <div class="form-group">
+                    <label for="input1" class="col-sm-4 control-label">Name</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control smbt-6" id="input1" placeholder="Name" ng-model="fname" autofocus>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input2" class="col-sm-4 control-label">Lastname</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="input2" placeholder="Last name" ng-model="lname" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input3" class="col-sm-4 control-label">Email</label>
+                    <div class="col-sm-4">
+                        <input type="email" class="form-control" id="input3" placeholder="Email" ng-model="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input4" class="col-sm-4 control-label">Tel</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="input4" placeholder="Tel" ng-model="tel" >
+                        <button type="submit" class="btn btn-default pull-right" ng-click="edit()" style="margin-right:0px;margin-top:20px;">Submit</button>
+                    </div>
+                </div>
+
+                <h3>{{error}}</h3>
+            </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="password">
+            <form class="form-horizontal pd-tp">
+                <error-alert></error-alert>
+                <div class="alert alert-success alert-dismissible" role="alert" ng-if="success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="removeSucc()"><span aria-hidden="true">&times;</span></button>
+                    <strong>Well done!</strong> {{success}}
+                </div>
+                <div class="form-group">
+                    <label for="input2" class="col-sm-4 control-label">New password</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" id="input2" placeholder="New password" ng-model="newPass">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input4" class="col-sm-4 control-label">Confirm password</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" id="input4" placeholder="Confirm password" ng-model="cNewPass">
+                        <button type="submit" class="btn btn-default pull-right" ng-click="changepass()" style="margin-right:0px;margin-top:20px;">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
