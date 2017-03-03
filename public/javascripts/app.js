@@ -32,8 +32,34 @@ angular.module('app', ['ui.router', 'ngResource'])
                         templateUrl: 'partials/jumbotron/home.html'
                     },
                     contentView: {
-                        controller: ($scope) => {
-                            $scope.title = "Recently Topics";
+                        resolve: {
+                            getTopics: (TopicsService) => {
+                                return TopicsService.getTopics().$promise
+                            }
+                        },
+                        controller: ($rootScope, $scope, getTopics, TopicsService) => {
+                            $scope.title = "Recently Topics"
+                            $scope.topics = []
+                            $scope.loadMore = true
+                            $scope.page     = 0
+
+                            if (getTopics.err) {
+                                $rootScope.reportErr(getTopics.err)
+                            } else {
+                                $scope.topics = getTopics.topics
+                                $rootScope.removeLoadMore($scope.topics.length)
+                            }
+
+                            $scope.loadMore = () => {
+                                TopicsService.getTopics({ myTopics: false, page: ++$scope.page }, (res) => {
+                                    if (res.err) {
+                                        console.log(res.err);
+                                    } else {
+                                        res.topics.forEach((row) => { $scope.topics.push(row) })
+                                        $rootScope.removeLoadMore(res.topics.length)
+                                    }
+                                })
+                            }
                         },
                         templateUrl: 'partials/topics.html'
                     }
@@ -63,18 +89,31 @@ angular.module('app', ['ui.router', 'ngResource'])
                 url: '/mytopics',
                 resolve: {
                     getTopics: (TopicsService) => {
-                        return TopicsService.getTopics().$promise
+                        return TopicsService.getTopics({ myTopics: true }).$promise
                     }
                 },
-                controller: ($rootScope, $scope, getTopics) => {
-                    $scope.title = 'My Topics'
-                    $scope.topics = []
+                controller: ($rootScope, $scope, getTopics, TopicsService) => {
+                    $scope.title    = 'My Topics'
+                    $scope.topics   = []
                     $scope.loadMore = true
+                    $scope.page     = 0
 
                     if (getTopics.err) {
                         $rootScope.reportErr(getTopics.err)
                     } else {
                         $scope.topics = getTopics.topics
+                        $rootScope.removeLoadMore($scope.topics.length)
+                    }
+
+                    $scope.loadMore = () => {
+                        TopicsService.getTopics({ myTopics: true, page: ++$scope.page }, (res) => {
+                            if (res.err) {
+                                console.log(res.err);
+                            } else {
+                                res.topics.forEach((row) => { $scope.topics.push(row) })
+                                $rootScope.removeLoadMore(res.topics.length)
+                            }
+                        })
                     }
                 },
                 templateUrl: 'partials/topics.html'
@@ -95,11 +134,26 @@ angular.module('app', ['ui.router', 'ngResource'])
         $rootScope.checkPath = (path) => $location.path() == path
 
         // clear error report
-        $rootScope.clearErr = () => { $rootScope.error = null }
+        // $rootScope.clearErr = () => { $rootScope.error = null }
+
+        // remove loadMore button
+        $rootScope.removeLoadMore = (length) => {
+            if (length < 5) { $('.load-more').remove() }
+        }
 
         // report error
         $rootScope.reportErr = (error) => {
             if ($('#errAlert').empty()) {
+
+                // when add topic and title was duplicated
+                if (error.code == 11000) {
+                    error = {
+                        name: 'Duplicated !',
+                        message: "Topic's title was duplicated."
+                    }
+                }
+
+                // error alert template
                 $('#errAlert').append(`
                     <div class="alert alert-danger alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -112,6 +166,7 @@ angular.module('app', ['ui.router', 'ngResource'])
 
         }
 
+        // init userAuth
         $rootScope.userAuth = null
 
     }])
@@ -150,27 +205,27 @@ angular.module('app', ['ui.router', 'ngResource'])
 
 
     // setup directive
-    .directive('errorAlert', ($compile, $rootScope) => {
-        return {
-            restrict: 'E',
-            link: (scope, elm) => {
-                $rootScope.$watch('error', () => {
-                    if ($rootScope.error) {
-                        let tmp = `
-                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true" ng-click="clearErr()">&times;</span>
-                                </button>
-                                <strong>{{error.name}}</strong> {{error.message}}
-                            </div>
-                        `
-                        elm.html(tmp)
-                        $compile(elm.contents())(scope)
-                    }
-                })
-            }
-        }
-    })
+    // .directive('errorAlert', ($compile, $rootScope) => {
+    //     return {
+    //         restrict: 'E',
+    //         link: (scope, elm) => {
+    //             $rootScope.$watch('error', () => {
+    //                 if ($rootScope.error) {
+    //                     let tmp = `
+    //                         <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
+    //                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    //                                 <span aria-hidden="true" ng-click="clearErr()">&times;</span>
+    //                             </button>
+    //                             <strong>{{error.name}}</strong> {{error.message}}
+    //                         </div>
+    //                     `
+    //                     elm.html(tmp)
+    //                     $compile(elm.contents())(scope)
+    //                 }
+    //             })
+    //         }
+    //     }
+    // })
 
 
 
@@ -205,6 +260,7 @@ angular.module('app', ['ui.router', 'ngResource'])
             })
         }
 
+        // removeErr fn for authCtrl
         $scope.removeErr = () => {
             $scope.error = null
         }

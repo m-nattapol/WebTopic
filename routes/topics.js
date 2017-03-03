@@ -5,11 +5,13 @@ let express = require('express'),
 router.route('/')
 
     .post((req, res) => {
+        let condition = (req.body.myTopics) ? { author: req.user.id } : {}
+
         Topic
-            .find()
+            .find(condition)
             .select('title detail author date')
             .populate('author')
-            // .skip(req.body.)
+            .skip(req.body.page * 5)
             .limit(5)
             .sort({ date: -1 })
             .exec((err, topics) => {
