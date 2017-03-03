@@ -2,15 +2,15 @@
     <h2>Topic Form</h2>
     <hr>
     <div class="form-group">
-        <label for="input1" class="col-sm-2 control-label">Title</label>
+        <label for="title" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control smbt-6" id="input1" placeholder="Title" name="title" autofocus>
+            <input type="text" class="form-control smbt-6" id="title" placeholder="Title" ng-model="title">
         </div>
     </div>
     <div class="form-group">
-        <label for="input2" class="col-sm-2 control-label">Detail</label>
+        <label for="detail" class="col-sm-2 control-label">Detail</label>
         <div class="col-sm-10">
-            <textarea class="form-control" rows="10" name="body" placeholder="Detail"></textarea>
+            <textarea class="form-control" rows="10" id="detail" ng-model="detail" placeholder="Detail"></textarea>
         </div>
     </div>
     <div class="form-group">

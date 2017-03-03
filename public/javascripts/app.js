@@ -47,6 +47,11 @@ angular.module('app', ['ui.router', 'ngResource'])
             })
             .state('topic', {
                 url: '/topic/add',
+                controller: ($scope) => {
+                    $scope.addTopic = () => {
+
+                    }
+                },
                 templateUrl: 'partials/topic.frm.html'
             })
             .state('myTopic', {
@@ -144,9 +149,9 @@ angular.module('app', ['ui.router', 'ngResource'])
     // authentication controller
     .controller('authCtrl', ($rootScope, $scope, AuthService) => {
 
-        let userSession = sessionStorage.getItem('user')
+        let userSession = JSON.parse(sessionStorage.getItem('user'))
         if (typeof userSession == 'object') {
-            $rootScope.userAuth = JSON.parse(userSession)
+            $rootScope.userAuth = userSession
         } else {
             sessionStorage.removeItem('user')
         }
@@ -154,9 +159,10 @@ angular.module('app', ['ui.router', 'ngResource'])
         // login fn
         $scope.login = () => {
             AuthService.login($scope.auth, (res) => {
+                console.log(res);
                 if (!res.err) {
                     $rootScope.userAuth = res.user
-                    sessionStorage.setItem('user', JSON.stringify)
+                    sessionStorage.setItem('user', JSON.stringify(res.user))
                 }
             })
         }

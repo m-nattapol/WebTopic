@@ -15,14 +15,10 @@ router.route('/')
         console.log(newUser);
 
         User.register(new User(newUser), req.body.password, (err, user) => {
-            console.log(err);
-            console.log(user);
             if (err) { res.json({ err: err }) }
 
             if (user) {
-                console.log('in if user');
                 req.login(user, (err) => {
-                    console.log(err);
                     if (err) { res.json({ err: err }) }
                     res.json({ user: {
                         id: user._id,
