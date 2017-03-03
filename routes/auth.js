@@ -9,6 +9,7 @@ router.post('/login', (req, res, next) => {
 
         if (user) {
             req.login(user, (err) => {
+                console.log(req.user);
                 if (err) { res.json({ err: err }) }
                 else { res.json({ user: {
                     id: user._id,

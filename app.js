@@ -10,8 +10,11 @@ let express         = require('express'),
     mongoose        = require('mongoose'),
     session         = require('express-session')
 
+    // require route
     user            = require('./routes/user'),
-    auth            = require('./routes/auth')
+    auth            = require('./routes/auth'),
+    topic           = require('./routes/topic'),
+    topics          = require('./routes/topics'),
 
     app             = express()
 
@@ -39,6 +42,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/auth', auth)
 app.use('/user', user)
+app.use('/topic', topic)
+app.use('/topics', topics)
 
 app.use(function(req, res) {
     res.sendFile(path.resolve(__dirname, 'public/index.html'))

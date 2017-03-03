@@ -17,7 +17,6 @@ angular.module('app', ['ui.router', 'ngResource'])
                 views: {
                     jumbotronView: {
                         controller: ($rootScope, $scope, UserService) => {
-
                             // register new user
                             $rootScope.resigter = () => {
                                 UserService.register($scope.user, (res) => {
@@ -29,7 +28,6 @@ angular.module('app', ['ui.router', 'ngResource'])
                                     }
                                 })
                             }
-
                         },
                         templateUrl: 'partials/jumbotron/home.html'
                     },
@@ -47,17 +45,37 @@ angular.module('app', ['ui.router', 'ngResource'])
             })
             .state('topic', {
                 url: '/topic/add',
-                controller: ($scope) => {
+                controller: ($rootScope, $scope, TopicService, $state) => {
+                    // add new topic
                     $scope.addTopic = () => {
-
+                        TopicService.addTopic($scope.topic, (res) => {
+                            if (res.err) {
+                                $rootScope.reportErr(res.err)
+                            } else {
+                                $state.go('myTopic')
+                            }
+                        })
                     }
                 },
                 templateUrl: 'partials/topic.frm.html'
             })
             .state('myTopic', {
                 url: '/mytopics',
-                controller: ($scope) => {
+                resolve: {
+                    getTopics: (TopicsService) => {
+                        return TopicsService.getTopics().$promise
+                    }
+                },
+                controller: ($rootScope, $scope, getTopics) => {
                     $scope.title = 'My Topics'
+                    $scope.topics = []
+                    $scope.loadMore = true
+
+                    if (getTopics.err) {
+                        $rootScope.reportErr(getTopics.err)
+                    } else {
+                        $scope.topics = getTopics.topics
+                    }
                 },
                 templateUrl: 'partials/topics.html'
             })
@@ -118,6 +136,16 @@ angular.module('app', ['ui.router', 'ngResource'])
             register: { method: 'POST' }
         })
     })
+    .factory('TopicService', ($resource) => {
+        return $resource('/topic', {}, {
+            addTopic: { method: 'POST' }
+        })
+    })
+    .factory('TopicsService', ($resource) => {
+        return $resource('/topics', {}, {
+            getTopics: { method: 'POST' }
+        })
+    })
 
 
 
@@ -147,7 +175,7 @@ angular.module('app', ['ui.router', 'ngResource'])
 
 
     // authentication controller
-    .controller('authCtrl', ($rootScope, $scope, AuthService) => {
+    .controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
 
         let userSession = JSON.parse(sessionStorage.getItem('user'))
         if (typeof userSession == 'object') {
@@ -159,7 +187,6 @@ angular.module('app', ['ui.router', 'ngResource'])
         // login fn
         $scope.login = () => {
             AuthService.login($scope.auth, (res) => {
-                console.log(res);
                 if (!res.err) {
                     $rootScope.userAuth = res.user
                     sessionStorage.setItem('user', JSON.stringify(res.user))
@@ -173,6 +200,7 @@ angular.module('app', ['ui.router', 'ngResource'])
                 if (!res.user) {
                     $rootScope.userAuth = null
                     sessionStorage.removeItem('user')
+                    $state.go('index.home')
                 }
             })
         }

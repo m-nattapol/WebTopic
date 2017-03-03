@@ -1,16 +1,17 @@
-<form class="form-horizontal" id="blog-frm">
+<form class="form-horizontal" ng-submit="addTopic()">
     <h2>Topic Form</h2>
     <hr>
+    <div id="errAlert"></div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control smbt-6" id="title" placeholder="Title" ng-model="title">
+            <input type="text" class="form-control smbt-6" id="title" placeholder="Title" ng-model="topic.title" required>
         </div>
     </div>
     <div class="form-group">
         <label for="detail" class="col-sm-2 control-label">Detail</label>
         <div class="col-sm-10">
-            <textarea class="form-control" rows="10" id="detail" ng-model="detail" placeholder="Detail"></textarea>
+            <textarea class="form-control" rows="10" id="detail" placeholder="Detail" ng-model="topic.detail" required></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -18,5 +19,4 @@
             <button type="submit" class="btn btn-default pull-right">Post</button>
         </div>
     </div>
-    <h3>{{error}}</h3>
 </form>
