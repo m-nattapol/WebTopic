@@ -145,8 +145,10 @@ angular.module('app', ['ui.router', 'ngResource'])
     .controller('authCtrl', ($rootScope, $scope, AuthService) => {
 
         let userSession = sessionStorage.getItem('user')
-        if (userSession) {
+        if (typeof userSession == 'object') {
             $rootScope.userAuth = JSON.parse(userSession)
+        } else {
+            sessionStorage.removeItem('user')
         }
 
         // login fn
