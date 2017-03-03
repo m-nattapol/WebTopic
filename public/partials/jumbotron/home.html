@@ -1,14 +1,15 @@
 <div class="jumbotron">
     <div class="container">
+
         <div class="col-md-6" ng-class="{'hidden-xs': checkPath('/register')}">
             <h1>WebTopic.com</h1>
             <p>This application is a little lab project.</p>
             <span>Thank you so much for Bootstrap, AngularJS, NodeJs, Express, MongoDB, Mongoose, Gulp, uiRouter, Bower, Git and so on.</span>
         </div>
+
         <div class="col-md-6" ng-class="{'hidden-xs': checkPath('/')}">
-            <form class="form-horizontal" id="regis-frm" ng-submit="">
+            <form class="form-horizontal" id="regis-frm" ng-submit="resigter()">
                 <h2 class="text-right">Register Form</h2>
-                <!-- <hr> -->
                 <div class="form-group">
                     <label for="input1" class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-4">
@@ -37,11 +38,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default pull-right">Register</button>
+                    <button type="submit" class="btn btn-default pull-right mg-r-15">Register</button>
                 </div>
-
-                <h3>{{error}}</h3>
             </form>
         </div>
+
+        <div class="clearfix"></div>
+        <error-alert></error-alert>
+
     </div>
 </div>

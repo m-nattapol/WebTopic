@@ -11,6 +11,7 @@ gulp.task('default', ['browserSync', 'jsWatch'], () => {
         'routes/**.js',
         'public/**.html',
         'public/partials/**.html',
+        'public/partials/**/**.html',
         'public/stylesheets/**.css'
     ]).on('change', reload)
 
