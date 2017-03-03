@@ -22,7 +22,7 @@ angular.module('app', ['ui.router', 'ngResource'])
                             $rootScope.resigter = () => {
                                 UserService.register($scope.user, (res) => {
                                     if (res.err) {
-                                        $rootScope.error = res.err
+                                        $rootScope.reportErr(res.err)
                                     } else {
                                         $rootScope.userAuth = res.user
                                         sessionStorage.setItem('user', JSON.stringify(res.user))
@@ -74,6 +74,21 @@ angular.module('app', ['ui.router', 'ngResource'])
         // clear error report
         $rootScope.clearErr = () => { $rootScope.error = null }
 
+        // report error
+        $rootScope.reportErr = (error) => {
+            if ($('#errAlert').empty()) {
+                $('#errAlert').append(`
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>${error.name}</strong> ${error.message}
+                    </div>
+                `)
+            }
+
+        }
+
         $rootScope.userAuth = null
 
     }])
@@ -85,6 +100,10 @@ angular.module('app', ['ui.router', 'ngResource'])
         return $resource('/auth', {}, {
             login: {
                 url: '/auth/login',
+                method: 'POST'
+            },
+            logout: {
+                url: '/auth/logout',
                 method: 'POST'
             }
         })
@@ -130,14 +149,28 @@ angular.module('app', ['ui.router', 'ngResource'])
             $rootScope.userAuth = JSON.parse(userSession)
         }
 
+        // login fn
         $scope.login = () => {
             AuthService.login($scope.auth, (res) => {
-                if (res.err) {
-                    $scope.error = res.err
-                } else {
+                if (!res.err) {
                     $rootScope.userAuth = res.user
                     sessionStorage.setItem('user', JSON.stringify)
                 }
             })
         }
+
+        // logout fn
+        $scope.logout = () => {
+            AuthService.logout((res) => {
+                if (!res.user) {
+                    $rootScope.userAuth = null
+                    sessionStorage.removeItem('user')
+                }
+            })
+        }
+
+        $scope.removeErr = () => {
+            $scope.error = null
+        }
+
     })
