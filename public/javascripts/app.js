@@ -20,7 +20,7 @@ angular.module('app', ['ui.router', 'ngResource'])
 
                             // register new user
                             $rootScope.resigter = () => {
-                                UserService.resigter($scope.user, (res) => {
+                                UserService.register($scope.user, (res) => {
                                     if (res.err) {
                                         $rootScope.error = res.err
                                     } else {
@@ -91,7 +91,7 @@ angular.module('app', ['ui.router', 'ngResource'])
     })
     .factory('UserService', ($resource) => {
         return $resource('/user', {}, {
-            addNew: { method: 'POST' }
+            register: { method: 'POST' }
         })
     })
 
@@ -126,7 +126,9 @@ angular.module('app', ['ui.router', 'ngResource'])
     .controller('authCtrl', ($rootScope, $scope, AuthService) => {
 
         let userSession = sessionStorage.getItem('user')
-        if (userSession) { $rootScope.userAuth = JSON.parse(userSession) }
+        if (userSession) {
+            $rootScope.userAuth = JSON.parse(userSession)
+        }
 
         $scope.login = () => {
             AuthService.login($scope.auth, (res) => {
@@ -134,7 +136,7 @@ angular.module('app', ['ui.router', 'ngResource'])
                     $scope.error = res.err
                 } else {
                     $rootScope.userAuth = res.user
-                    sessionStorage.setItem('user', JSON.stringify(res.user))
+                    sessionStorage.setItem('user', JSON.stringify)
                 }
             })
         }
