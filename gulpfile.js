@@ -7,11 +7,7 @@ let gulp        = require('gulp'),
 
 gulp.task('default', ['browserSync', 'jsWatch'], () => {
     gulp.watch([
-        'app.js',
-        'routes/**.js',
-        'public/**.html',
-        'public/partials/**.html',
-        'public/partials/**/**.html',
+        'public/**/**.html',
         'public/stylesheets/**.css'
     ]).on('change', reload)
 
@@ -30,8 +26,11 @@ gulp.task('jsWatch', ['jsCompile'], () => {
 
 gulp.task('jsCompile', () => {
     gulp.src([
-        'public/javascripts/app.js'
+        'public/javascripts/app.js',
+        'public/javascripts/service.js',
+        'public/javascripts/controller.js'
     ])
+    .pipe(concat('app.js'))
     .pipe(babel({presets:['es2015']}))
     .pipe(uglify({mangle:false}))
     .pipe(gulp.dest('public/javascripts/dist'))

@@ -5,7 +5,7 @@ let express = require('express'),
 router.route('/')
 
     .post((req, res) => {
-        let condition = (req.body.myTopics) ? { author: req.user.id } : {}
+        let condition = (req.body.myTopics) ? { author: req.user._id } : {}
 
         Topic
             .find(condition)
@@ -15,11 +15,10 @@ router.route('/')
             .limit(5)
             .sort({ date: -1 })
             .exec((err, topics) => {
-                if (err) {
-                    res.json({ err: err })
-                } else {
-                    res.json({ topics: topics })
-                }
+                res.json({
+                    err: err,
+                    topics: topics
+                })
             })
     })
 

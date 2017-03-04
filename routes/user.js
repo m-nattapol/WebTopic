@@ -19,11 +19,13 @@ router.route('/')
 
             if (user) {
                 req.login(user, (err) => {
-                    if (err) { res.json({ err: err }) }
-                    res.json({ user: {
-                        id: user._id,
-                        name: `${user.name} ${user.lastname}`
-                    } })
+                    res.json({
+                        err: err,
+                        user: {
+                            id: user._id,
+                            name: `${user.name} ${user.lastname}`
+                        }
+                    })
                 })
             }
         })

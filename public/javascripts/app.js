@@ -1,7 +1,7 @@
-angular.module('app', ['ui.router', 'ngResource'])
+let app = angular.module('app', ['ui.router', 'ngResource'])
 
     // config stateProvider, urlRouterProvider, locationProvider
-    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', ($stateProvider, $urlRouterProvider, $locationProvider) => {
+    app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', ($stateProvider, $urlRouterProvider, $locationProvider) => {
 
         $locationProvider.html5Mode(true)
 
@@ -16,19 +16,7 @@ angular.module('app', ['ui.router', 'ngResource'])
                 url: '/',
                 views: {
                     jumbotronView: {
-                        controller: ($rootScope, $scope, UserService) => {
-                            // register new user
-                            $rootScope.resigter = () => {
-                                UserService.register($scope.user, (res) => {
-                                    if (res.err) {
-                                        $rootScope.reportErr(res.err)
-                                    } else {
-                                        $rootScope.userAuth = res.user
-                                        sessionStorage.setItem('user', JSON.stringify(res.user))
-                                    }
-                                })
-                            }
-                        },
+                        controller: 'jumbotronView',
                         templateUrl: 'partials/jumbotron/home.html'
                     },
                     contentView: {
@@ -37,42 +25,37 @@ angular.module('app', ['ui.router', 'ngResource'])
                                 return TopicsService.getTopics().$promise
                             }
                         },
-                        controller: ($rootScope, $scope, getTopics, TopicsService) => {
-                            $scope.title = "Recently Topics"
-                            $scope.topics = []
-                            $scope.loadMore = true
-                            $scope.page     = 0
-
-                            if (getTopics.err) {
-                                $rootScope.reportErr(getTopics.err)
-                            } else {
-                                $scope.topics = getTopics.topics
-                                $rootScope.removeLoadMore($scope.topics.length)
-                            }
-
-                            $scope.loadMore = () => {
-                                TopicsService.getTopics({ myTopics: false, page: ++$scope.page }, (res) => {
-                                    if (res.err) {
-                                        console.log(res.err);
-                                    } else {
-                                        res.topics.forEach((row) => { $scope.topics.push(row) })
-                                        $rootScope.removeLoadMore(res.topics.length)
-                                    }
-                                })
-                            }
-                        },
+                        controller: 'contentView',
                         templateUrl: 'partials/topics.html'
                     }
                 }
             })
             .state('register', {
                 url: '/register',
+                controller: 'jumbotronView',
                 templateUrl: 'partials/jumbotron/home.html'
             })
+            // .state('addTopic', {
+            //     url: '/topic/add',
+            //     controller: 'topicCtrl',
+            //     templateUrl: 'partials/topic.frm.html'
+            // })
+            // .state('topic', {
+            //     url: '/topic/:id',
+            //     resolve: {
+            //         topicContent: ($stateParams, TopicService) =>
+            //             TopicService.getContent({ topicId: $stateParams.id }).$promise
+            //     },
+            //     controller: 'topicCtrl',
+            //     templateUrl: 'partials/topic.html',
+            // })
             .state('topic', {
-                url: '/topic/add',
-                controller: ($rootScope, $scope, TopicService, $state) => {
-                    // add new topic
+                url: '/topic',
+                template: '<div ui-view></div>'
+            })
+            .state('topic.add', {
+                url: '/add',
+                controller: ($scope, $rootScope, TopicService) => {
                     $scope.addTopic = () => {
                         TopicService.addTopic($scope.topic, (res) => {
                             if (res.err) {
@@ -83,39 +66,22 @@ angular.module('app', ['ui.router', 'ngResource'])
                         })
                     }
                 },
-                templateUrl: 'partials/topic.frm.html'
+                templateUrl: 'partials/topic.frm.html',
+            })
+            .state('topic.content', {
+                url: '/:id',
+                resolve: {
+                    topicContent: ($stateParams, TopicService) => TopicService.getContent({ topicId: $stateParams.id }).$promise
+                },
+                controller: 'topicCtrl',
+                templateUrl: 'partials/topic.html',
             })
             .state('myTopic', {
                 url: '/mytopics',
                 resolve: {
-                    getTopics: (TopicsService) => {
-                        return TopicsService.getTopics({ myTopics: true }).$promise
-                    }
+                    getTopics: (TopicsService) => TopicsService.getTopics({ myTopics: true }).$promise
                 },
-                controller: ($rootScope, $scope, getTopics, TopicsService) => {
-                    $scope.title    = 'My Topics'
-                    $scope.topics   = []
-                    $scope.loadMore = true
-                    $scope.page     = 0
-
-                    if (getTopics.err) {
-                        $rootScope.reportErr(getTopics.err)
-                    } else {
-                        $scope.topics = getTopics.topics
-                        $rootScope.removeLoadMore($scope.topics.length)
-                    }
-
-                    $scope.loadMore = () => {
-                        TopicsService.getTopics({ myTopics: true, page: ++$scope.page }, (res) => {
-                            if (res.err) {
-                                console.log(res.err);
-                            } else {
-                                res.topics.forEach((row) => { $scope.topics.push(row) })
-                                $rootScope.removeLoadMore(res.topics.length)
-                            }
-                        })
-                    }
-                },
+                controller: 'myTopic',
                 templateUrl: 'partials/topics.html'
             })
             .state('profile', {
@@ -143,7 +109,9 @@ angular.module('app', ['ui.router', 'ngResource'])
 
         // report error
         $rootScope.reportErr = (error) => {
+            console.log('in reportErr');
             if ($('#errAlert').empty()) {
+                console.log('is empty');
 
                 // when add topic and title was duplicated
                 if (error.code == 11000) {
@@ -153,8 +121,11 @@ angular.module('app', ['ui.router', 'ngResource'])
                     }
                 }
 
+                $('.btn-default').css('coloe', 'red')
+alert('ok')
+                console.log(error);
                 // error alert template
-                $('#errAlert').append(`
+                $('#errAlert').html(`
                     <div class="alert alert-danger alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -170,39 +141,6 @@ angular.module('app', ['ui.router', 'ngResource'])
         $rootScope.userAuth = null
 
     }])
-
-
-
-    // setup Service
-    .factory('AuthService', ($resource) => {
-        return $resource('/auth', {}, {
-            login: {
-                url: '/auth/login',
-                method: 'POST'
-            },
-            logout: {
-                url: '/auth/logout',
-                method: 'POST'
-            }
-        })
-    })
-    .factory('UserService', ($resource) => {
-        return $resource('/user', {}, {
-            register: { method: 'POST' }
-        })
-    })
-    .factory('TopicService', ($resource) => {
-        return $resource('/topic', {}, {
-            addTopic: { method: 'POST' }
-        })
-    })
-    .factory('TopicsService', ($resource) => {
-        return $resource('/topics', {}, {
-            getTopics: { method: 'POST' }
-        })
-    })
-
-
 
     // setup directive
     // .directive('errorAlert', ($compile, $rootScope) => {
@@ -226,43 +164,3 @@ angular.module('app', ['ui.router', 'ngResource'])
     //         }
     //     }
     // })
-
-
-
-    // authentication controller
-    .controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
-
-        let userSession = JSON.parse(sessionStorage.getItem('user'))
-        if (typeof userSession == 'object') {
-            $rootScope.userAuth = userSession
-        } else {
-            sessionStorage.removeItem('user')
-        }
-
-        // login fn
-        $scope.login = () => {
-            AuthService.login($scope.auth, (res) => {
-                if (!res.err) {
-                    $rootScope.userAuth = res.user
-                    sessionStorage.setItem('user', JSON.stringify(res.user))
-                }
-            })
-        }
-
-        // logout fn
-        $scope.logout = () => {
-            AuthService.logout((res) => {
-                if (!res.user) {
-                    $rootScope.userAuth = null
-                    sessionStorage.removeItem('user')
-                    $state.go('index.home')
-                }
-            })
-        }
-
-        // removeErr fn for authCtrl
-        $scope.removeErr = () => {
-            $scope.error = null
-        }
-
-    })

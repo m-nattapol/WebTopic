@@ -24,15 +24,50 @@ router.route('/')
         }
 
         Topic.create(newTopic, (err, topic) => {
-            if (err) { res.json({ err: err }) }
-            else {
+            res.json({
+                err: err,
+                topic: {
+                    title: topic.title,
+                    detail: topic.detail
+                }
+            })
+        })
+    })
+
+router.route('/:topicId')
+
+    // get topic content
+    .get((req, res) => {
+        Topic
+            .findById(req.params.topicId)
+            .populate('author')
+            .select('title detail date author')
+            .exec((err, topic) => {
                 res.json({
-                    topic: {
-                        title: topic.title,
-                        detail: topic.detail
-                    }
+                    err: err,
+                    topic: topic
                 })
-            }
+            })
+    })
+
+    // edit topic content
+    .put(checkAuthenticated, (req, res) => {
+        Topic
+            .findByIdAndUpdate(req.params.topicId, req.body, (err, topic) => {
+                res.json({
+                    err: err,
+                    id: topic._id
+                })
+            })
+    })
+
+    // delete topic
+    .delete(checkAuthenticated, (req, res) => {
+        Topic.remove({_id: req.params.topicId}, (err, topic) => {
+            res.json({
+                err: err,
+                id: topic._id
+            })
         })
     })
 

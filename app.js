@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/auth', auth)
 app.use('/user', user)
-app.use('/topic', topic)
+app.use('/topic/api', topic)
 app.use('/topics', topics)
 
 app.use(function(req, res) {

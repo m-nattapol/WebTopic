@@ -9,17 +9,21 @@ router.post('/login', (req, res, next) => {
 
         if (user) {
             req.login(user, (err) => {
-                if (err) { res.json({ err: err }) }
-                else { res.json({ user: {
-                    id: user._id,
-                    name: `${user.name} ${user.lastname}`
-                } }) }
+                res.json({
+                    err: err,
+                    user: {
+                        id: user._id,
+                        name: `${user.name} ${user.lastname}`
+                    }
+                })
             })
         } else {
-            res.json({ err: {
-                name: 'Authentication Fail',
-                message: 'username or password incorrect.'
-            } })
+            res.json({
+                err: {
+                    name: 'Authentication Fail',
+                    message: 'username or password incorrect.'
+                }
+            })
         }
     })(req, res, next)
 })

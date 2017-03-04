@@ -2,10 +2,10 @@
 <hr>
 
 <div class="topic" ng-repeat="topic in topics">
-    <h4><a href="/topic/{{topic._id}}">{{topic.title}}</a></h4>
+    <h4><a ui-sref="topic.content({id:topic._id})">{{topic.title}}</a></h4>
     <p class="text-right">
         <small>{{topic.author.name}} {{topic.author.lastname}} : {{topic.date|date:'medium'}}</small>
     </p>
 </div>
 
-<p class="load-more text-center" ng-click="loadMore()">More</p>
+<p class="load-more text-center" ng-click="loadMore()">Load More</p>
