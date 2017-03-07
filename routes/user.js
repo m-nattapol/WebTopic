@@ -2,6 +2,19 @@ let express = require('express'),
     User    = require('../models/user'),
     router  = express.Router()
 
+function checkAuthenticated(req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.json({
+            err: {
+                name: 'There are mistake!',
+                message: 'You need to authenticate.'
+            }
+        })
+    } else {
+        next()
+    }
+}
+
 router.route('/')
 
     // add new user
@@ -28,6 +41,41 @@ router.route('/')
                     })
                 })
             }
+        })
+    })
+
+router.route('/:userId')
+
+    // edit user profile
+    .put(checkAuthenticated, (req, res) => {
+        User
+            .findByIdAndUpdate(req.params.userId, req.body, (err, user) => {
+                res.json({
+                    err: err,
+                    user: user
+                })
+            })
+    })
+
+router.route('/changepass/:userId')
+
+    // change password
+    .put(checkAuthenticated, (req, res) => {
+        User.findById(req.params.userId, (err, user) => {
+            if (err) {
+                res.json({
+                    err: err
+                })
+            }
+            user.setPassword(req.body.newPass, (err, user) => {
+                console.log(err);
+                console.log(user);
+                user.save()
+                res.json({
+                    err: err,
+                    user: user
+                })
+            })
         })
     })
 

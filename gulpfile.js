@@ -28,7 +28,8 @@ gulp.task('jsCompile', () => {
     gulp.src([
         'public/javascripts/app.js',
         'public/javascripts/service.js',
-        'public/javascripts/controller.js'
+        'public/javascripts/controller.js',
+        'public/javascripts/directive.js'
     ])
     .pipe(concat('app.js'))
     .pipe(babel({presets:['es2015']}))

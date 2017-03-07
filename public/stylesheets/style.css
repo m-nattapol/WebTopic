@@ -25,6 +25,10 @@ a {
     margin-right: 15px;
 }
 
+.mg-l-10 {
+    margin-left: 10px;
+}
+
 .topic {
     border-bottom: 1px solid #e1e1e8;
     margin-bottom: 25px;
@@ -46,4 +50,8 @@ a {
 
 .load-more:hover {
     background-color: #f7f7f9;
+}
+
+.comment-content {
+    font-size: 14px;
 }

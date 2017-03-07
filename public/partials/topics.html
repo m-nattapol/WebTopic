@@ -4,7 +4,7 @@
 <div class="topic" ng-repeat="topic in topics">
     <h4><a ui-sref="topic.content({id:topic._id})">{{topic.title}}</a></h4>
     <p class="text-right">
-        <small>{{topic.author.name}} {{topic.author.lastname}} : {{topic.date|date:'medium'}}</small>
+        <small>{{topic.author.name}} {{topic.author.lastname}} :: {{topic.date|date:'medium'}}</small>
     </p>
 </div>
 

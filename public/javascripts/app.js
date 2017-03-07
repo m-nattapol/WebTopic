@@ -35,27 +35,13 @@ let app = angular.module('app', ['ui.router', 'ngResource'])
                 controller: 'jumbotronView',
                 templateUrl: 'partials/jumbotron/home.html'
             })
-            // .state('addTopic', {
-            //     url: '/topic/add',
-            //     controller: 'topicCtrl',
-            //     templateUrl: 'partials/topic.frm.html'
-            // })
-            // .state('topic', {
-            //     url: '/topic/:id',
-            //     resolve: {
-            //         topicContent: ($stateParams, TopicService) =>
-            //             TopicService.getContent({ topicId: $stateParams.id }).$promise
-            //     },
-            //     controller: 'topicCtrl',
-            //     templateUrl: 'partials/topic.html',
-            // })
             .state('topic', {
                 url: '/topic',
                 template: '<div ui-view></div>'
             })
             .state('topic.add', {
                 url: '/add',
-                controller: ($scope, $rootScope, TopicService) => {
+                controller: ($scope, $rootScope, TopicService, $state) => {
                     $scope.addTopic = () => {
                         TopicService.addTopic($scope.topic, (res) => {
                             if (res.err) {
@@ -86,6 +72,7 @@ let app = angular.module('app', ['ui.router', 'ngResource'])
             })
             .state('profile', {
                 url: '/profile',
+                controller: 'profileCtrl',
                 templateUrl: 'profile.html'
             })
 
@@ -108,10 +95,8 @@ let app = angular.module('app', ['ui.router', 'ngResource'])
         }
 
         // report error
-        $rootScope.reportErr = (error) => {
-            console.log('in reportErr');
-            if ($('#errAlert').empty()) {
-                console.log('is empty');
+        $rootScope.reportErr = (error, elmId = 'errAlert') => {
+            if ($(`#${elmId}`).empty()) {
 
                 // when add topic and title was duplicated
                 if (error.code == 11000) {
@@ -121,11 +106,8 @@ let app = angular.module('app', ['ui.router', 'ngResource'])
                     }
                 }
 
-                $('.btn-default').css('coloe', 'red')
-alert('ok')
-                console.log(error);
                 // error alert template
-                $('#errAlert').html(`
+                $(`#${elmId}`).html(`
                     <div class="alert alert-danger alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -134,33 +116,9 @@ alert('ok')
                     </div>
                 `)
             }
-
         }
 
         // init userAuth
         $rootScope.userAuth = null
 
     }])
-
-    // setup directive
-    // .directive('errorAlert', ($compile, $rootScope) => {
-    //     return {
-    //         restrict: 'E',
-    //         link: (scope, elm) => {
-    //             $rootScope.$watch('error', () => {
-    //                 if ($rootScope.error) {
-    //                     let tmp = `
-    //                         <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
-    //                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    //                                 <span aria-hidden="true" ng-click="clearErr()">&times;</span>
-    //                             </button>
-    //                             <strong>{{error.name}}</strong> {{error.message}}
-    //                         </div>
-    //                     `
-    //                     elm.html(tmp)
-    //                     $compile(elm.contents())(scope)
-    //                 }
-    //             })
-    //         }
-    //     }
-    // })

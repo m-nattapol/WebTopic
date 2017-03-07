@@ -15,6 +15,7 @@ let express         = require('express'),
     auth            = require('./routes/auth'),
     topic           = require('./routes/topic'),
     topics          = require('./routes/topics'),
+    comment         = require('./routes/comment')
 
     app             = express()
 
@@ -44,6 +45,7 @@ app.use('/auth', auth)
 app.use('/user', user)
 app.use('/topic/api', topic)
 app.use('/topics', topics)
+app.use('/comment/api', comment)
 
 app.use(function(req, res) {
     res.sendFile(path.resolve(__dirname, 'public/index.html'))
