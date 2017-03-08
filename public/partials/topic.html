@@ -16,12 +16,14 @@
         <div class="clearfix">
             <div class="col-md-6 col-md-offset-3" style="margin-bottom: 50px">
                 <h4>Comment something.</h4>
-                <form ng-submit="addComment()">
+                <form name="commentfrm" ng-submit="commentfrm.$valid && addComment()">
                     <div id="errAlert"></div>
                     <div class="form-group">
-                        <textarea class="form-control" rows="5" ng-model="newComment" placeholder="Comment :" required></textarea>
+                        <textarea class="form-control new-comment" rows="5" name="newComment"
+                            ng-model="newComment" placeholder="Comment :"
+                            required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-default pull-right">Post</button>
+                    <button type="submit" class="btn btn-default pull-right" ng-disabled="commentfrm.$invalid">Post</button>
                     <div class="clearfix"></div>
                 </form>
             </div>

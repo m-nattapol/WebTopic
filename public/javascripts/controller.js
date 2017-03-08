@@ -267,9 +267,16 @@ app.controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
 
 
     // profile controller
-    .controller('profileCtrl', ($rootScope, $scope, UserService) => {
+    .controller('profileCtrl', ($rootScope, $scope, UserService, AuthService) => {
 
-        $scope.user = $rootScope.userAuth
+        // $scope.user = $rootScope.userAuth
+        AuthService.getUser((res) => {
+            if (res.err) {
+                $rootScope.reportErr(res.err, 'errAlertProfile')
+            } else {
+                $scope.user = res.user
+            }
+        })
 
         // edit profile
         $scope.editProfile = () => {
@@ -284,6 +291,10 @@ app.controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
                 if (res.err) {
                     $rootScope.reportErr(res.err, 'errAlertProfile')
                 } else {
+                    localStorage.removeItem('user')
+                    localStorage.setItem('user', JSON.stringify(res.user))
+                    $rootScope.userAuth = res.user
+
                     $(`#successAlertProfile`).html(`
                         <div class="alert alert-success alert-dismissible" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -297,7 +308,7 @@ app.controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
         }
 
         $scope.editPassword = () => {
-            if ($scope.newPass == $scope.cNewPass) {
+            if ($scope.checkMatch()) {
                 UserService.editPassword({
                     userId: $rootScope.userAuth.id
                 }, {
@@ -323,4 +334,8 @@ app.controller('authCtrl', ($rootScope, $scope, AuthService, $state) => {
                 }, 'errAlertPassword')
             }
         }
+
+        // check new password and comfirm password is match?
+        $scope.checkMatch = () => $scope.newPass == $scope.cNewPass
+
     })

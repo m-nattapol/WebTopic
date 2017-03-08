@@ -55,3 +55,25 @@ a {
 .comment-content {
     font-size: 14px;
 }
+
+.error, .ng-dirty.ng-invalid {
+    border-color: red !important;
+}
+
+.frmalert {
+    color: red;
+}
+
+.frmalert p {
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.ng-valid {
+    border-color: #5cb85c;
+}
+
+.ignore.ng-pristine, .ignore.ng-empty.ng-valid-pattern, .new-comment, .new-comment.ng-empty, .edit-comment, .edit-comment.ng-empty {
+    border-color: #ccc !important;
+}

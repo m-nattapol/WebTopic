@@ -22,13 +22,13 @@ app.directive('commentField', () => {
                 <div class="clearfix"></div>
             </div>
             <div ng-show="editActive">
-                <form ng-submit="editComment()">
+                <form name="ecomfrm" ng-submit="editComment()">
                     <div id="errAlert"></div>
                     <div class="form-group">
-                        <textarea class="form-control" rows="5" ng-model="comment.detail" placeholder="Comment :"></textarea>
+                        <textarea class="form-control edit-comment" rows="5" name="ecomment" ng-model="comment.detail" placeholder="Comment :" required></textarea>
                     </div>
                     <a class="btn btn-default mg-l-10 pull-right" ng-click="toggle();reset()">Cancel</a>
-                    <button type="submit" class="btn btn-default pull-right">Edit</button>
+                    <button type="submit" class="btn btn-default pull-right" ng-disabled="ecomfrm.ecomment.$invalid">Edit</button>
                     <div class="clearfix"></div>
                 </form>
             </div>

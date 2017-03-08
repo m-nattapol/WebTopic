@@ -10,39 +10,57 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="profile">
-            <form class="form-horizontal pd-tp" ng-submit="editProfile()">
+            <form class="form-horizontal pd-tp" name="regisfrm" ng-submit="regisfrm.$valid && editProfile()" novalidate>
                 <div id="errAlertProfile"></div>
                 <div id="successAlertProfile"></div>
                 <div class="form-group">
                     <label for="input1" class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control smbt-6" id="input1" placeholder="Name" ng-model="user.name" required>
+                        <input type="text" class="form-control smbt-6" id="input1" name="name" placeholder="Name"
+                            ng-class="{error: regisfrm.name.$dirty && regisfrm.name.$invalid}" ng-model="user.name" required>
+                        <span class="frmalert" ng-show="regisfrm.name.$dirty">
+                            <p ng-show="regisfrm.name.$invalid">Name is required.</p>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="input2" class="col-sm-4 control-label">Lastname</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="input2" placeholder="Last name" ng-model="user.lastname" required>
+                        <input type="text" class="form-control" id="input2" name="lastname" placeholder="Last name"
+                            ng-class="{error: regisfrm.lastname.$dirty && regisfrm.lastname.$invalid}" ng-model="user.lastname" required>
+                        <span class="frmalert" ng-show="regisfrm.lastname.$dirty">
+                            <p ng-show="regisfrm.lastname.$invalid">Last name is required.</p>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="input3" class="col-sm-4 control-label">Email</label>
                     <div class="col-sm-4">
-                        <input type="email" class="form-control" id="input3" placeholder="Email" ng-model="user.email" required>
+                        <input type="email" class="form-control" id="input3" name="email" placeholder="Email"
+                            ng-class="{error: regisfrm.email.$invalid && regisfrm.email.$dirty}" ng-model="user.email" required>
+                        <span class="frmalert" ng-show="regisfrm.email.$dirty">
+                            <p ng-show="regisfrm.email.$error.required">Email is required.</p>
+                            <p ng-show="regisfrm.email.$invalid">Press enter a valid email address.</p>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="input4" class="col-sm-4 control-label">Tel</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="input4" placeholder="Tel" ng-model="user.tel">
-                        <button type="submit" class="btn btn-default pull-right" style="margin-right:0px;margin-top:20px;">Submit</button>
+                        <input type="text" class="form-control ignore" id="input4" placeholder="Tel" name="tel"
+                            ng-model="user.tel" ng-pattern="/^0(6|8|9)[0-9]{8}$/">
+                        <span class="frmalert" ng-show="regisfrm.tel.$dirty">
+                            <p ng-show="regisfrm.tel.$invalid">Press enter a valid tel number.</p>
+                        </span>
+                        <button type="submit" class="btn btn-default pull-right" ng-disabled="regisfrm.$invalid"
+                            style="margin-right:0px;margin-top:20px;">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
 
         <div role="tabpanel" class="tab-pane" id="password">
-            <form class="form-horizontal pd-tp" ng-submit="editPassword()">
+            <form class="form-horizontal pd-tp" name="passfrm" ng-submit="passfrm.$valid && editPassword()" novalidate>
                 <div id="errAlertPassword"></div>
                 <div id="successAlertPassword"></div>
                 <div class="alert alert-success alert-dismissible" role="alert" ng-if="success">
@@ -52,14 +70,24 @@
                 <div class="form-group">
                     <label for="input2" class="col-sm-4 control-label">New password</label>
                     <div class="col-sm-6">
-                        <input type="password" class="form-control" id="input2" placeholder="New password" ng-model="newPass">
+                        <input type="password" class="form-control" id="input2" placeholder="New password" name="newpass"
+                            ng-model="newPass" ng-calss="{error: passfrm.newpass.$dirty && passfrm.newpass.$invalid}" required>
+                        <span class="frmalert" ng-show="passfrm.newpass.$dirty">
+                            <p ng-show="passfrm.newpass.$invalid">This field is required.</p>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="input4" class="col-sm-4 control-label">Confirm password</label>
                     <div class="col-sm-6">
-                        <input type="password" class="form-control" id="input4" placeholder="Confirm password" ng-model="cNewPass">
-                        <button type="submit" class="btn btn-default pull-right" style="margin-right:0px;margin-top:20px;">Submit</button>
+                        <input type="password" class="form-control" id="input4" placeholder="Confirm password" name="cpass"
+                            ng-model="cNewPass" ng-class="{error: passfrm.cpass.$dirty && (!checkMatch() || passfrm.cpass.$invalid)}" required>
+                        <span class="frmalert" ng-show="passfrm.cpass.$dirty">
+                            <p ng-show="passfrm.cpass.$invalid">This field is required.</p>
+                            <p ng-show="!checkMatch()">Confirm password was't match with New password.</p>
+                        </span>
+                        <button type="submit" class="btn btn-default pull-right" ng-disabled="passfrm.$invalid"
+                            style="margin-right:0px;margin-top:20px;">Submit</button>
                     </div>
                 </div>
             </form>

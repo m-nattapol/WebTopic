@@ -15,7 +15,7 @@ let userSchema = new Schema({
         type: String,
         required: true
     },
-    tel: Number
+    tel: String
 })
 
 userSchema.plugin(passportLocalMongoose, {

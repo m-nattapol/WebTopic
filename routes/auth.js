@@ -18,7 +18,13 @@ function checkAuthenticated(req, res, next) {
 
 router.get('/', checkAuthenticated, (req, res) => {
     res.json({
-        user: req.user._id
+        user: {
+            id: req.user._id,
+            name: req.user.name,
+            lastname: req.user.lastname,
+            email: req.user.email,
+            tel: req.user.tel
+        }
     })
 })
 
@@ -33,9 +39,7 @@ router.post('/login', (req, res, next) => {
                     user: {
                         id: user._id,
                         name: user.name,
-                        lastname: user.lastname,
-                        email: user.email,
-                        tel: user.tel
+                        lastname: user.lastname
                     }
                 })
             })

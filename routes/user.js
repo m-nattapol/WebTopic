@@ -50,9 +50,16 @@ router.route('/:userId')
     .put(checkAuthenticated, (req, res) => {
         User
             .findByIdAndUpdate(req.params.userId, req.body, (err, user) => {
+                console.log(user);
                 res.json({
                     err: err,
-                    user: user
+                    user: {
+                        id: user._id,
+                        name: req.body.name,
+                        lastname: req.body.lastname,
+                        email: req.body.email,
+                        tel: req.body.tel
+                    }
                 })
             })
     })
